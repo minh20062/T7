@@ -1,7 +1,7 @@
-import axios from 'axios';
-import { API_URL } from '../constants';
+import axios from "axios";
 
-export const getUsers = ()=> axios.get(`${API_URL}/users`);
-export const createUser = (user) => axios.post(`${API_URL}/users`,user);
-export const updateUser = (id,user) => axios.put(`${API_URL}/users/${id}`,user);
-export const deleteUser = (id) => axios.delete(`${API_URL}/users/${id}`);
+const instance = axios.create({
+    baseURL: "http://localhost:5000/api",
+    withCredentials: true,
+});
+export default instance;
