@@ -1,11 +1,13 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
+
 
 export default function PrivateRoute({ children }) {
   const token = localStorage.getItem("token");
+  const location = useLocation();
 
-  // Nếu có token → cho vào
-  if (token) return children;
+  if (!token) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
-  // Nếu chưa login → đẩy về login
-  return <Navigate to="/login" />;
+  return children;
 }
