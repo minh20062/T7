@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/login";
-import HomePage from "./pages/HomePage";
 import PrivateRoute from "./routes/PrivateRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import UserProfile from "./pages/UserProfile";
 
 // 📦 Các module admin
 import DashboardHome from "./pages/admin/DashboardHome"; // ✅ đúng file tổng quan
@@ -10,13 +10,14 @@ import Products from "./pages/admin/products";
 import Revenue from "./pages/admin/revenue";
 import Inventory from "./pages/admin/inventory";
 import Analytics from "./pages/admin/analytics";
+import InventoryManager from "./pages/admin/inventorymanager";
 
 export default function App() {
   return (
     <Routes>
       {/* 🟢 Public routes */}
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/home" element={<HomePage />} />
+      <Route path="/profile" element={<UserProfile />} />
 
       {/* 🔐 Admin routes */}
       <Route
@@ -35,6 +36,7 @@ export default function App() {
         <Route path="revenue" element={<Revenue />} />
         <Route path="inventory" element={<Inventory />} />
         <Route path="analytics" element={<Analytics />} />
+        <Route path="inventory-manager" element={<InventoryManager />} />
       </Route>
     </Routes>
   );

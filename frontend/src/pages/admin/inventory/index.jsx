@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { ProductContext } from "../../../context/ProductContext";
+import { CubeIcon } from "@heroicons/react/24/solid";
 
 export default function Inventory() {
   const { products } = useContext(ProductContext);
@@ -29,7 +30,10 @@ export default function Inventory() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-blue-600 mb-4">📦 Kho hàng</h1>
+      <h1 className="text-2xl font-bold text-black mb-4 flex items-center gap-2">
+        <CubeIcon className="h-6 w-6 text-amber-800" />
+        Kho hàng
+      </h1>
 
       {/* 🔎 Bộ lọc */}
       <div className="mb-4 flex flex-col md:flex-row gap-4">
@@ -77,7 +81,10 @@ export default function Inventory() {
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="p-4 italic text-center text-gray-500">
+                <td
+                  colSpan="4"
+                  className="p-4 italic text-center text-gray-500"
+                >
                   Không tìm thấy sản phẩm phù hợp
                 </td>
               </tr>

@@ -1,12 +1,16 @@
 import { useContext } from "react";
 import { ProductContext } from "../../../context/ProductContext"; // đường dẫn chỉnh theo vị trí
+import { ArrowTrendingUpIcon } from "@heroicons/react/24/solid";
 
 export default function Analytics() {
   const { revenue, inventory, topProducts } = useContext(ProductContext);
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-blue-600 mb-4">📊 Thống kê</h1>
+      <h1 className="text-2xl font-bold text-black mb-4 flex items-center gap-2">
+       <ArrowTrendingUpIcon className="h-6 w-6 text-emerald-600" />
+        Thống kê
+      </h1>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white p-4 rounded shadow">

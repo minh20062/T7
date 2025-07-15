@@ -1,4 +1,5 @@
 import React from "react";
+import { FaBoxes } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import {
   FaBoxOpen,
@@ -28,12 +29,17 @@ const Sidebar = () => (
       </li>
       <li>
         <NavLink to="/admin/inventory" className={linkClass}>
-          <FaWarehouse /> Kho hàng
+          <FaBoxes/> Kho hàng
         </NavLink>
       </li>
       <li>
         <NavLink to="/admin/analytics" className={linkClass}>
           <FaChartBar /> Thống kê
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/admin/inventory-manager" className={linkClass}>
+          <FaWarehouse /> Nhập / Xuất kho
         </NavLink>
       </li>
     </ul>

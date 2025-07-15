@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { ProductContext } from "../../../context/ProductContext";
+import { WalletIcon } from "@heroicons/react/24/solid";
 
 export default function Revenue() {
   const { products, revenue } = useContext(ProductContext);
@@ -8,8 +9,9 @@ export default function Revenue() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-green-700 mb-4">
-        💰 Thống kê doanh thu
+      <h1 className="text-2xl font-bold text-black mb-4 flex items-center gap-2">
+        <WalletIcon className="h-6 w-6 text-yellow-400" />
+        Thống kê doanh thu
       </h1>
 
       {/* Tổng doanh thu */}

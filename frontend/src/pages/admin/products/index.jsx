@@ -1,12 +1,17 @@
 import React, { useContext, useState } from "react";
 import { ProductContext } from "../../../context/ProductContext";
 import { CubeIcon } from "@heroicons/react/24/solid";
+import { CreditCardIcon } from "@heroicons/react/24/solid";
 
 export default function Products() {
   const { products, setProducts } = useContext(ProductContext);
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredProducts = products.filter((p) =>
+    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // 🛠 Xử lý sửa
   function handleEdit(product) {
@@ -28,7 +33,8 @@ export default function Products() {
     if (
       !selectedProduct.name ||
       selectedProduct.price < 0 ||
-      selectedProduct.stock < 0
+      selectedProduct.stock < 0 ||
+      !selectedProduct.manufacturer // ✅ kiểm tra thêm
     ) {
       alert("Vui lòng nhập đầy đủ và đúng dữ liệu!");
       return;
@@ -37,7 +43,7 @@ export default function Products() {
     let updated;
 
     if (selectedProduct.id) {
-      // 🧩 Sửa sản phẩm có sẵn
+      // 🧩 Sửa sản phẩm
       updated = products.map((p) =>
         p.id === selectedProduct.id ? selectedProduct : p
       );
@@ -46,14 +52,15 @@ export default function Products() {
       const newProduct = {
         ...selectedProduct,
         id: Date.now(),
-        sold: 0, // ✅ Gút để hệ thống đồng bộ doanh thu
+        sold: 0,
+        manufacturer: selectedProduct.manufacturer, // ✅ thêm vào
       };
       updated = [...products, newProduct];
     }
 
     // 🧠 Cập nhật context và localStorage
     setProducts(updated);
-    localStorage.setItem("products", JSON.stringify(updated)); // nếu bạn chưa có useEffect lưu tự động
+    localStorage.setItem("products", JSON.stringify(updated));
 
     // 🧼 Dọn UI
     setShowModal(false);
@@ -61,31 +68,48 @@ export default function Products() {
   }
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-black mb-4">
-        🛍️ Quản lý sản phẩm
+      <h1 className="text-2xl font-bold text-black mb-4 flex items-center gap-2">
+        <CreditCardIcon className="h-6 w-6 text-black" />
+        Quản lý sản phẩm
       </h1>
-      {/* 👉 Nút thêm */}
-      <button
-        onClick={() => {
-          setSelectedProduct({ name: "", price: 0, stock: 0 });
-          setShowModal(true);
-        }}
-        className="mb-4 px-4 py-2 bg-black text-white rounded flex items-center gap-2"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="w-5 h-5"
+      <div className="mb-4 flex flex-col md:flex-row justify-between items-center gap-4">
+        {/* 🔍 Tìm kiếm bên trái */}
+        <input
+          type="text"
+          placeholder="🔍 Tìm sản phẩm..."
+          className="border p-2 rounded w-full md:w-1/2"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+
+        {/* ➕ Thêm sản phẩm bên phải */}
+        <button
+          onClick={() => {
+            setSelectedProduct({
+              name: "",
+              price: 0,
+              stock: 0,
+              manufacturer: "",
+            });
+            setShowModal(true);
+          }}
+          className="px-4 py-2 bg-black text-white rounded flex items-center gap-2"
         >
-          <path
-            fillRule="evenodd"
-            d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
-            clipRule="evenodd"
-          />
-        </svg>
-        Thêm sản phẩm
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="w-5 h-5"
+          >
+            <path
+              fillRule="evenodd"
+              d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+              clipRule="evenodd"
+            />
+          </svg>
+          Thêm sản phẩm
+        </button>
+      </div>
 
       <section className="p-8">
         <h1 className="text-3xl font-bold text-black bg-gray-100 p-4 rounded shadow flex items-center justify-center gap-4">
@@ -98,15 +122,17 @@ export default function Products() {
         <thead className="bg-gray-100 text-gray-500 uppercase">
           <tr>
             <th className="p-3 text-left">Tên</th>
+            <th className="p-3 text-left">Nhà sản xuất</th>
             <th className="p-3 text-left">Giá</th>
             <th className="p-3 text-left">Tồn kho</th>
             <th className="p-3 text-left">Hành động</th>
           </tr>
         </thead>
         <tbody>
-          {products.map((p) => (
+          {filteredProducts.map((p) => (
             <tr key={p.id} className="border-b hover:bg-gray-50">
               <td className="p-3">{p.name}</td>
+              <td className="p-3">{p.manufacturer || "—"}</td>
               <td className="p-3">₫{p.price.toLocaleString()}</td>
               <td className="p-3">{p.stock}</td>
               <td className="p-3 space-x-2">
@@ -146,6 +172,21 @@ export default function Products() {
                   setSelectedProduct({
                     ...selectedProduct,
                     name: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nhà sản xuất
+              </label>
+              <input
+                className="w-full p-2 border border-gray-300 rounded"
+                value={selectedProduct.manufacturer || ""}
+                onChange={(e) =>
+                  setSelectedProduct({
+                    ...selectedProduct,
+                    manufacturer: e.target.value,
                   })
                 }
               />
