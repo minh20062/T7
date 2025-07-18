@@ -70,7 +70,7 @@ export default function Inventory() {
           <tbody>
             {filteredProducts.length ? (
               filteredProducts.map((item) => (
-                <tr key={item.id || item.sku} className="border-b">
+                <tr key={item.id || item.sku} className="border-b hover:bg-gray-50">
                   <td className="p-4">{item.name}</td>
                   <td className="p-4">{item.sku || `SP-${item.id}`}</td>
                   <td className="p-4">{item.stock}</td>

@@ -46,7 +46,7 @@ export default function LoginForm() {
         <span className="brand-name">MINHCOMPANY</span>
       </div>
       <form className="login-form" onSubmit={handleLogin}>
-        <h2>LOGIN</h2>
+        <h2>ĐĂNG NHẬP</h2>
         {errorMsg && <p className="error">{errorMsg}</p>}
         <input
           type="email"
@@ -62,7 +62,7 @@ export default function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">LOGIN</button>
+        <button type="submit">ĐĂNG NHẬP</button>
       </form>
     </div>
   );

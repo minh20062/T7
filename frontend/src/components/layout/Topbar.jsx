@@ -32,11 +32,11 @@ export default function Topbar() {
 
   return (
     <header className="bg-white shadow flex justify-end px-6 py-3 relative">
-      <div ref={menuRef} className="flex items-center gap-4 relative">
+      <div ref={menuRef} className="flex items-center gap-4 relative ">
         <img
           src="/assets/mm.png"
           alt="Avatar CEO Minh"
-          className="h-10 w-10 rounded-full border object-cover cursor-pointer"
+          className="h-10 w-10 rounded-full border-2 border-black object-cover cursor-pointer"
           onClick={() => setShowMenu(!showMenu)}
         />
         {showMenu && (

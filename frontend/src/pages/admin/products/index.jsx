@@ -4,14 +4,15 @@ import { CubeIcon } from "@heroicons/react/24/solid";
 import { CreditCardIcon } from "@heroicons/react/24/solid";
 
 export default function Products() {
-  const { products, setProducts } = useContext(ProductContext);
+  const { products, setProducts, manufacturers } = useContext(ProductContext);
 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const filteredProducts = products.filter((p) =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products.filter((p) => {
+    const matchedName = p.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchedName;
+  });
 
   // 🛠 Xử lý sửa
   function handleEdit(product) {
@@ -34,7 +35,7 @@ export default function Products() {
       !selectedProduct.name ||
       selectedProduct.price < 0 ||
       selectedProduct.stock < 0 ||
-      !selectedProduct.manufacturer // ✅ kiểm tra thêm
+      !selectedProduct.manufacturerId // ✅ kiểm tra thêm
     ) {
       alert("Vui lòng nhập đầy đủ và đúng dữ liệu!");
       return;
@@ -53,7 +54,6 @@ export default function Products() {
         ...selectedProduct,
         id: Date.now(),
         sold: 0,
-        manufacturer: selectedProduct.manufacturer, // ✅ thêm vào
       };
       updated = [...products, newProduct];
     }
@@ -89,7 +89,7 @@ export default function Products() {
               name: "",
               price: 0,
               stock: 0,
-              manufacturer: "",
+              manufacturerId: "",
             });
             setShowModal(true);
           }}
@@ -129,28 +129,31 @@ export default function Products() {
           </tr>
         </thead>
         <tbody>
-          {filteredProducts.map((p) => (
-            <tr key={p.id} className="border-b hover:bg-gray-50">
-              <td className="p-3">{p.name}</td>
-              <td className="p-3">{p.manufacturer || "—"}</td>
-              <td className="p-3">₫{p.price.toLocaleString()}</td>
-              <td className="p-3">{p.stock}</td>
-              <td className="p-3 space-x-2">
-                <button
-                  onClick={() => handleEdit(p)}
-                  className="px-2 py-1 bg-green-500 text-white rounded"
-                >
-                  ✏️ Sửa
-                </button>
-                <button
-                  onClick={() => handleDelete(p.id)}
-                  className="px-2 py-1 bg-red-500 text-white rounded"
-                >
-                  🗑️ Xoá
-                </button>
-              </td>
-            </tr>
-          ))}
+          {filteredProducts.map((p) => {
+            const m = manufacturers.find((man) => man.id === p.manufacturerId);
+            return (
+              <tr key={p.id} className="border-b hover:bg-gray-50">
+                <td className="p-3">{p.name}</td>
+                <td className="p-3">{m?.name || "—"}</td>
+                <td className="p-3">₫{p.price.toLocaleString()}</td>
+                <td className="p-3">{p.stock}</td>
+                <td className="p-3 space-x-2">
+                  <button
+                    onClick={() => handleEdit(p)}
+                    className="px-2 py-1 bg-green-500 text-white rounded"
+                  >
+                    ✏️ Sửa
+                  </button>
+                  <button
+                    onClick={() => handleDelete(p.id)}
+                    className="px-2 py-1 bg-red-500 text-white rounded"
+                  >
+                    🗑️ Xoá
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       {/* ✨ Modal thêm / sửa */}
@@ -176,20 +179,27 @@ export default function Products() {
                 }
               />
             </div>
+
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Nhà sản xuất
               </label>
-              <input
-                className="w-full p-2 border border-gray-300 rounded"
-                value={selectedProduct.manufacturer || ""}
+              <select
+                value={selectedProduct.manufacturerId || ""}
                 onChange={(e) =>
                   setSelectedProduct({
                     ...selectedProduct,
-                    manufacturer: e.target.value,
+                    manufacturerId: Number(e.target.value),
                   })
                 }
-              />
+              >
+                <option value="">Chọn nhà sản xuất</option>
+                {manufacturers.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="mb-4">
@@ -226,10 +236,10 @@ export default function Products() {
               />
             </div>
 
-            <div className="text-right space-x-2">
+            <div className="text-right space-x-2 py-3">
               <button
                 onClick={handleSave}
-                className="px-4 py-2 bg-blue-600 text-white rounded"
+                className="px-4 py-2 bg-black text-white rounded hover:bg-green-500"
               >
                 Lưu
               </button>

@@ -11,6 +11,8 @@ import Revenue from "./pages/admin/revenue";
 import Inventory from "./pages/admin/inventory";
 import Analytics from "./pages/admin/analytics";
 import InventoryManager from "./pages/admin/inventorymanager";
+import Manufacturers from "./pages/admin/manufacturers";
+
 
 export default function App() {
   return (
@@ -37,6 +39,8 @@ export default function App() {
         <Route path="inventory" element={<Inventory />} />
         <Route path="analytics" element={<Analytics />} />
         <Route path="inventory-manager" element={<InventoryManager />} />
+        <Route path="manufacturers" element={<Manufacturers />} />
+
       </Route>
     </Routes>
   );
